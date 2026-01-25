@@ -1,0 +1,16 @@
+body {
+    font-family: "Open Sans", sans-serif;
+}
+.sidebar li a {
+    color: #000 !important;
+    font-size: 14px;
+}
+.sidebar li a:hover, .sidebar li .active {
+    color: #5f63f2 !important;
+    background: #e3e3f7;
+    padding: 10px 20px;
+}
+.nav-title {
+    color: #a2a3a4 !important;
+    padding: 10px 0;
+}
