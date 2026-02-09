@@ -1,13 +1,20 @@
-@extends('layouts.admin')
+@php
+    $layout = auth()->guard('trainer')->check()
+        ? 'layouts.trainer'
+        : 'layouts.admin';
+@endphp
+
+@extends($layout)
+
 
 @section('content')
     <div class="col-md-10 p-4" style="background: #f4f5f7">
         <h3 class="mb-4">➕ Add New Subject</h3>
 
-        <form action="{{ route('admin.users.subjects.store') }}" method="POST">
+        <form action="{{ auth()->guard('trainer')->check() ? route('trainer.subjects.store') : route('admin.users.subjects.store') }}" method="POST">
             @csrf
 
-            <input type="hidden" name="session_id" value="{{ request('session_id') }}">
+            <input type="hidden" name="session_id" value="{{ $sessions[0]->id }}">
             <div class="mb-3">
                 <label class="form-label">Date:</label>
                 <input type="date" name="date" class="form-control" required value="{{ old('date') }}">
@@ -31,7 +38,10 @@
                 </div>
             @endif
             <div class="d-flex justify-content-between">
-                <a href="{{ route('admin.users.subjects.index') }}" class="btn btn-secondary">← Back</a>
+                <a href="{{ auth()->guard('trainer')->check()
+                    ? route('trainer.subjects.active', ['session' => $sessions[0]->id ])
+                    : route('admin.users.subjects.index')
+                }}" class="btn btn-secondary">← Back</a>
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-save me-1"></i> Save Subject
                 </button>

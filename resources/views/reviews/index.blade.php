@@ -15,7 +15,7 @@
                     <thead class="table-dark">
                     <tr>
                         <th style="width:5%">#</th>
-                        <th style="width:15%">Trainee</th>
+                        <th style="width:15%">Student</th>
                         <th style="width:20%">Subject</th>
                         <th style="width:20%">Session</th>
                         <th style="width:10%">Rating</th>

@@ -13,25 +13,97 @@ use Illuminate\Validation\Rule;
 
 class TrainerController extends Controller
 {
+    public function index()
+    {
+        $users = Trainer::with('sessions')->paginate(10);
+        return view('admin.users.trainers.index', compact('users'));
+    }
+
+    public function create()
+    {
+        $sessions = Session::all();
+        return view('admin.users.trainers.create', compact('sessions'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:trainers,email',
+            'password' => 'required|string|min:6|confirmed',
+            'sessions' => 'nullable|array',
+            'sessions.*' => 'exists:sessions,id',
+        ]);
+
+        $trainer = Trainer::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        if (!empty($validated['sessions'])) {
+            Session::whereIn('id', $validated['sessions'])->update(['trainer_id' => $trainer->id]);
+        }
+
+        return redirect()->route('admin.users.trainers.index')->with('success', 'Trainer created successfully.');
+    }
+
+    public function edit(Trainer $trainer)
+    {
+        $admin = $trainer->load('sessions');
+        $sessions = Session::all();
+        return view('admin.users.trainers.edit', compact('admin', 'sessions'));
+    }
+
+    public function update(Request $request, Trainer $trainer)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'email', Rule::unique('trainers')->ignore($trainer->id)],
+            'password' => 'nullable|string|min:6|confirmed',
+            'sessions' => 'nullable|array',
+            'sessions.*' => 'exists:sessions,id',
+        ]);
+
+        $trainer->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => $validated['password'] ? Hash::make($validated['password']) : $trainer->password,
+        ]);
+
+        // Assign selected sessions to this trainer
+        if (!empty($validated['sessions'])) {
+            Session::whereIn('id', $validated['sessions'])->update(['trainer_id' => $trainer->id]);
+        }
+
+        return redirect()->route('admin.users.trainers.index')->with('success', 'Trainer updated successfully.');
+    }
+
+    public function destroy(Trainer $trainer)
+    {
+        $trainer->delete();
+        return redirect()->route('admin.users.trainers.index')->with('success', 'Trainer deleted.');
+    }
+
     public function dashboard()
     {
-        $sessions = Session::with('subjects')->get();
+        $sessions = Session::with(['subjects' => function ($q) {
+            $q->approved();
+        }])->get();
         $now = Carbon::now();
         $today = $now->format('Y-m-d');
-        $currentTime = $now->format('H:i:s');
-        $currentDayName = $now->format('l'); // Sunday, Monday...
 
-        // 3. Get the next subject (by date and time)
-        $nextSubject = Subject::whereIn('session_id', $sessions->pluck('id'))
+        // Get the next approved subject (by date)
+        $nextSubject = Subject::approved()->whereIn('session_id', $sessions->pluck('id'))
             ->whereDate('date', '>=', $today)
             ->orderBy('date')
             ->first();
 
-        // 4. Get all subjects in the current month
+        // Get all approved subjects in the current month
         $startOfMonth = $now->copy()->startOfMonth()->format('Y-m-d');
         $endOfMonth = $now->copy()->endOfMonth()->format('Y-m-d');
 
-        $monthlySubjects = Subject::whereIn('session_id', $sessions->pluck('id'))
+        $monthlySubjects = Subject::approved()->whereIn('session_id', $sessions->pluck('id'))
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->orderBy('date')
             ->get();
@@ -46,19 +118,38 @@ class TrainerController extends Controller
     }
     function pendingSubjects(Session $session)
     {
-        $subjects = Subject::where('session_id', $session->id)->latest()->paginate(10);
+        $subjects = Subject::where('session_id', $session->id)
+            ->whereIn('status', ['pending_qa', 'pending_admin', 'rejected_qa', 'rejected_admin'])
+            ->latest()
+            ->paginate(10);
         return view('trainer.pending_subjects', compact('subjects'));
     }
-    function activeSubjects(Session $session)
+    function activeSubjects(Request $request, Session $session)
     {
-        $subjects = Subject::approved()->where('session_id', $session->id)->latest()->paginate(10);
-        return view('trainer.subjects', compact('subjects'));
+        $subjects = Subject::approved()->where('session_id', $session->id)
+            ->withCount('attendances')
+            ->when($request->search, function ($q) use ($request) {
+                $q->where(function ($q) use ($request) {
+                    $q->where('title', 'like', '%' . $request->search . '%')
+                      ->orWhere('date', 'like', '%' . $request->search . '%');
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+        return view('trainer.subjects', compact('subjects', 'session'));
     }
 
     public function activeSessions()
     {
-        $sessions = Session::orderBy('time_from', 'desc')->paginate(10);
+        $sessions = Session::withCount('trainees')->orderBy('time_from', 'desc')->paginate(10);
         return view('trainer.active_sessions', compact('sessions'));
+    }
+
+    public function sessionStudents(Session $session)
+    {
+        $session->load('trainees');
+        return view('trainer.session_students', compact('session'));
     }
     public function approveSubject(Subject $subject)
     {

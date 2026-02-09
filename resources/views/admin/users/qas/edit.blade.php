@@ -4,13 +4,13 @@
     <div class="col-md-10 p-4" style="background: #f4f5f7">
         <div class="card shadow-sm">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">✏️ Edit Admin User</h4>
-                <a href="{{ route('admin.users.admins.index') }}" class="btn btn-sm btn-outline-secondary">
+                <h4 class="mb-0">✏️ Edit QA User</h4>
+                <a href="{{ route('admin.users.qas.index') }}" class="btn btn-sm btn-outline-secondary">
                     ← Back to List
                 </a>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ route('admin.users.admins.update', $admin->id) }}">
+                <form method="POST" action="{{ route('admin.users.qas.update', $admin->id) }}">
                     @csrf
                     @method('PUT')
 
@@ -37,7 +37,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary">
-                        💾 Update Admin
+                        💾 Update QA
                     </button>
                 </form>
             </div>

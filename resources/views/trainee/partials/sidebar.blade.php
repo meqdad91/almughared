@@ -1,11 +1,22 @@
+@php
+    if (!function_exists('isActive')) {
+        function isActive($routes)
+        {
+            return request()->routeIs($routes) ? 'active' : '';
+        }
+    }
+@endphp
 <div class="col-md-2 bg-light min-vh-100 p-3">
     <ul class="nav flex-column sidebar">
         <li class="nav-title">Main Menu</li>
         <li class="nav-item">
-            <a class="nav-link {{ isActive('qa.dashboard') }}" href="{{ route('trainee.dashboard') }}">🏠 Dashboard</a>
+            <a class="nav-link {{ isActive('trainee.dashboard') }}" href="{{ route('trainee.dashboard') }}">🏠 Dashboard</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{ isActive('trainee.session.*') }}" href="{{ route('trainee.session.index') }}">🕒 Sessions</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ isActive('trainee.attendance.*') }}" href="{{ route('trainee.attendance.index') }}">📋 Attendance</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{ isActive('messages.*') }}" href="{{ route('messages.index') }}">

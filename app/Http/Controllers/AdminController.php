@@ -88,16 +88,22 @@ class AdminController extends Controller
         return view('admin.pending_subjects', compact('subjects'));
     }
 
+    public function showPendingSubject(\App\Models\Subject $subject)
+    {
+        $subject->load('session.trainer');
+        return view('admin.subject_show', compact('subject'));
+    }
+
     public function approveSubject(Request $request, \App\Models\Subject $subject)
     {
         $subject->update(['status' => 'approved', 'rejection_reason' => null]);
-        return redirect()->back()->with('success', 'Subject approved successfully.');
+        return redirect()->route('admin.users.subjects.pending')->with('success', 'Subject approved successfully.');
     }
 
     public function rejectSubject(Request $request, \App\Models\Subject $subject)
     {
         $request->validate(['rejection_reason' => 'required|string']);
         $subject->update(['status' => 'rejected_admin', 'rejection_reason' => $request->rejection_reason]);
-        return redirect()->back()->with('success', 'Subject rejected.');
+        return redirect()->route('admin.users.subjects.pending')->with('success', 'Subject rejected.');
     }
 }

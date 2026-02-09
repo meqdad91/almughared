@@ -11,7 +11,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Title</th>
-                            <th>Trainer</th>
+                            <th>Teacher</th>
                             <th>Time</th>
                             <th>Actions</th>
                         </tr>
@@ -29,7 +29,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('qa.subjects.pending', $session->id) }}" class="btn btn-sm btn-primary">
+                                    <a href="{{ route('qa.subjects.active', $session->id) }}" class="btn btn-sm btn-primary">
                                         <i class="bi bi-eye"></i> View Subjects
                                     </a>
                                 </td>

@@ -16,13 +16,15 @@ class TraineeController extends Controller
 {
     public function index()
     {
-        $users = Trainee::paginate(10); // Replace model accordingly
-        return view('admin.users.trainees.index', compact('users'));
+        $users = Trainee::with('sessions')->paginate(10);
+        $sessions = Session::all();
+        return view('admin.users.trainees.index', compact('users', 'sessions'));
     }
 
     public function create()
     {
-        return view('admin.users.trainees.create');
+        $sessions = Session::all();
+        return view('admin.users.trainees.create', compact('sessions'));
     }
 
     public function store(Request $request)
@@ -31,20 +33,28 @@ class TraineeController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:trainees,email',
             'password' => 'required|string|min:6|confirmed',
+            'sessions' => 'nullable|array',
+            'sessions.*' => 'exists:sessions,id',
         ]);
 
-        Trainee::create([
+        $trainee = Trainee::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
+
+        if (!empty($validated['sessions'])) {
+            $trainee->sessions()->attach($validated['sessions']);
+        }
 
         return redirect()->route('admin.users.trainees.index')->with('success', 'Trainee created successfully.');
     }
 
     public function edit(Trainee $trainee)
     {
-        return view('admin.users.trainees.edit', compact('trainee'));
+        $trainee->load('sessions');
+        $sessions = Session::all();
+        return view('admin.users.trainees.edit', compact('trainee', 'sessions'));
     }
 
     public function update(Request $request, Trainee $trainee)
@@ -53,6 +63,8 @@ class TraineeController extends Controller
             'name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('trainees')->ignore($trainee->id)],
             'password' => 'nullable|string|min:6|confirmed',
+            'sessions' => 'nullable|array',
+            'sessions.*' => 'exists:sessions,id',
         ]);
 
         $trainee->update([
@@ -61,6 +73,8 @@ class TraineeController extends Controller
             'password' => $validated['password'] ? Hash::make($validated['password']) : $trainee->password,
         ]);
 
+        $trainee->sessions()->sync($validated['sessions'] ?? []);
+
         return redirect()->route('admin.users.trainees.index')->with('success', 'Trainee updated successfully.');
     }
 
@@ -68,6 +82,18 @@ class TraineeController extends Controller
     {
         $trainee->delete();
         return redirect()->route('admin.users.trainees.index')->with('success', 'Trainee deleted.');
+    }
+
+    public function approve(Request $request, Trainee $trainee)
+    {
+        $validated = $request->validate([
+            'session_id' => 'required|exists:sessions,id',
+        ]);
+
+        $trainee->update(['status' => 'approved']);
+        $trainee->sessions()->syncWithoutDetaching([$validated['session_id']]);
+
+        return redirect()->route('admin.users.trainees.index')->with('success', 'Trainee approved and assigned to session.');
     }
 
     public function dashboard()

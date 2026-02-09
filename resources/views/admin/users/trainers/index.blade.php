@@ -3,9 +3,9 @@
 @section('content')
     <div class="col-md-10 p-4" style="background: #f4f5f7">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="mb-0">👤 User Management - Trainers</h3>
-            <a href="{{ route('admin.users.admins.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-1"></i> Add Trainer
+            <h3 class="mb-0">👤 User Management - Teachers</h3>
+            <a href="{{ route('admin.users.trainers.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Add Teacher
             </a>
         </div>
 
@@ -15,10 +15,11 @@
                     <thead class="table-dark">
                     <tr>
                         <th style="width: 5%">ID</th>
-                        <th style="width: 20%">Name</th>
-                        <th style="width: 25%">Email</th>
-                        <th style="width: 20%">Join Date</th>
-                        <th style="width: 30%">Action</th>
+                        <th style="width: 15%">Name</th>
+                        <th style="width: 20%">Email</th>
+                        <th style="width: 20%">Sessions</th>
+                        <th style="width: 15%">Join Date</th>
+                        <th style="width: 25%">Action</th>
                     </tr>
                     </thead>
                     <tbody class="table-group-divider">
@@ -27,6 +28,13 @@
                             <td class="fw-bold">{{ $admin->id }}</td>
                             <td>{{ $admin->name }}</td>
                             <td>{{ $admin->email }}</td>
+                            <td>
+                                @forelse ($admin->sessions as $session)
+                                    <span class="badge bg-info text-dark mb-1">{{ $session->title }}</span>
+                                @empty
+                                    <span class="text-muted">None</span>
+                                @endforelse
+                            </td>
                             <td>{{ $admin->created_at->format('Y-m-d') }}</td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
@@ -56,7 +64,7 @@
             </div>
         @else
             <div class="alert alert-info shadow-sm rounded py-3 px-4">
-                No users found. Click <strong>Add Trainer</strong> to create one.
+                No users found. Click <strong>Add Teacher</strong> to create one.
             </div>
         @endif
     </div>

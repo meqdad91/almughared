@@ -16,7 +16,7 @@
                         <tr>
                             <th style="width: 5%">ID</th>
                             <th style="width: 20%">Title</th>
-                            <th style="width: 20%">Trainer</th>
+                            <th style="width: 20%">Teacher</th>
                             <th style="width: 20%">Time</th>
                             <th style="width: 15%">Days</th>
                             <th style="width: 20%">Action</th>

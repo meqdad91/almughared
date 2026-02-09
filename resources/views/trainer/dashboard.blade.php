@@ -26,7 +26,7 @@
                 </ul>
             </div>
         @endif
-        <h2 class="mb-4">My Training Calendar</h2>
+        <h2 class="mb-4">My Teaching Calendar</h2>
 
         @php
             use Carbon\Carbon;
@@ -49,16 +49,16 @@
                 </h4>
 
                 <!-- Calendar -->
-                <table class="table table-bordered bg-white">
+                <table class="table table-bordered bg-white" style="table-layout: fixed; width: 100%;">
                     <thead class="table-light text-center">
                     <tr>
-                        <th>Sun</th>
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
-                        <th>Sat</th>
+                        <th style="width: 14.28%">Sun</th>
+                        <th style="width: 14.28%">Mon</th>
+                        <th style="width: 14.28%">Tue</th>
+                        <th style="width: 14.28%">Wed</th>
+                        <th style="width: 14.28%">Thu</th>
+                        <th style="width: 14.28%">Fri</th>
+                        <th style="width: 14.28%">Sat</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -93,7 +93,7 @@
                                     @foreach($subjectsByDate[$currentDate] as $subject)
                                         <div class="mt-2 p-2 rounded bg-primary text-white small">
                                             <div class="fw-bold" title="{{ $subject->title }}">
-                                                <a href="{{ route('trainee.session.show', $subject->id) }}"
+                                                <a href="{{ route('trainer.subjects.show', $subject->id) }}"
                                                    class="text-white text-decoration-underline">
                                                     {{ $subject->title }}
                                                 </a>

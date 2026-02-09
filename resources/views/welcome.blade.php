@@ -52,8 +52,8 @@
                     <ul class="collapse submenu" id="userMgmtSubmenu">
                         <li class="nav-item"><a class="nav-link" href="/admin/users/admins">Admins</a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/users/qas">QAs</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/admin/users/trainers">Trainers</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/admin/users/trainees">Trainees</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/users/trainers">Teachers</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/users/trainees">Students</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">

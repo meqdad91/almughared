@@ -4,7 +4,7 @@
     <div class="col-md-10 p-4" style="background: #f4f5f7">
         <div class="card shadow-sm">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">✏️ Edit Trainer User</h4>
+                <h4 class="mb-0">✏️ Edit Teacher User</h4>
                 <a href="{{ route('admin.users.trainers.index') }}" class="btn btn-sm btn-outline-secondary">
                     ← Back to List
                 </a>
@@ -36,8 +36,21 @@
                         @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
+                    <div class="mb-3">
+                        <label for="sessions" class="form-label">Assign Sessions</label>
+                        <select name="sessions[]" id="sessions" class="form-select @error('sessions') is-invalid @enderror" multiple size="5">
+                            @foreach ($sessions as $session)
+                                <option value="{{ $session->id }}" {{ collect(old('sessions', $admin->sessions->pluck('id')->toArray()))->contains($session->id) ? 'selected' : '' }}>
+                                    {{ $session->title }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small class="text-muted">Hold Ctrl to select multiple sessions</small>
+                        @error('sessions') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
                     <button type="submit" class="btn btn-primary">
-                        💾 Update Trainer
+                        💾 Update Teacher
                     </button>
                 </form>
             </div>

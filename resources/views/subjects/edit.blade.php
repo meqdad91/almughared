@@ -22,7 +22,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.users.subjects.update', $subject->id) }}" method="POST">
+        <form action="{{ auth()->guard('trainer')->check() ? route('trainer.subjects.update', $subject->id) : route('admin.users.subjects.update', $subject->id) }}" method="POST">
             @csrf
             @method('PUT')
 
@@ -55,7 +55,7 @@
             @endif
 
             <div class="d-flex justify-content-between">
-                <a href="{{ route('admin.users.subjects.index') }}" class="btn btn-secondary">← Back</a>
+                <a href="{{ auth()->guard('trainer')->check() ? route('trainer.subjects.index') : route('admin.users.subjects.index') }}" class="btn btn-secondary">← Back</a>
                 <button type="submit" class="btn btn-success">
                     <i class="bi bi-check-circle me-1"></i> Update Subject
                 </button>

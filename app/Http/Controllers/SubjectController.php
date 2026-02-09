@@ -45,6 +45,10 @@ class SubjectController extends Controller
 
         Subject::create($request->only('session_id', 'title', 'description', 'date'));
 
+        if (Auth::guard('trainer')->check()) {
+            return redirect()->route('trainer.subjects.active', ['session' =>$request->session_id ])->with('success', 'Subject created successfully.');
+        }
+
         return redirect()->route('admin.users.subjects.index', ['session_id' => $request->session_id])->with('success', 'Subject created successfully.');
     }
 
@@ -56,6 +60,7 @@ class SubjectController extends Controller
 
     public function show(Subject $subject)
     {
+        $subject->load('session')->loadCount('attendances');
         return view('subjects.show', compact('subject'));
     }
 
@@ -83,11 +88,15 @@ class SubjectController extends Controller
             $data['rejection_reason'] = null;
         } elseif (Auth::guard('admin')->check()) {
             // Admin can force update status if needed, or keep it. For now, let's keep it simple or allow status update via form if we added it.
-            // But requirement says Admin approves via pending tab. If admin edits details, maybe keep status or reset? 
+            // But requirement says Admin approves via pending tab. If admin edits details, maybe keep status or reset?
             // Let's assume editing details doesn't auto-approve.
         }
 
         $subject->update($data);
+
+        if (Auth::guard('trainer')->check()) {
+            return redirect()->route('trainer.subjects.index')->with('success', 'Subject updated successfully.');
+        }
 
         return redirect()->route('admin.users.subjects.index')->with('success', 'Subject updated successfully.');
     }

@@ -33,8 +33,8 @@
                                 <option value="">{{ __('Select user type') }}</option>
                                 <option value="admin">Admin</option>
                                 <option value="qa">QA</option>
-                                <option value="trainer">Trainer</option>
-                                <option value="trainee">Trainee</option>
+                                <option value="trainer">Teacher</option>
+                                <option value="trainee">Student</option>
                             </select>
                         </div>
                         <div class="mb-2">
@@ -53,12 +53,12 @@
                                 @endforeach
                                 @foreach ($trainers as $trainer)
                                     <option value="{{ $trainer->id }}" data-type="trainer">
-                                        Trainer: {{ $trainer->name ?? 'Trainer #'.$trainer->id }} ({{ $trainer->email ?? '' }})
+                                        Teacher: {{ $trainer->name ?? 'Teacher #'.$trainer->id }} ({{ $trainer->email ?? '' }})
                                     </option>
                                 @endforeach
                                 @foreach ($trainees as $trainee)
                                     <option value="{{ $trainee->id }}" data-type="trainee">
-                                        Trainee: {{ $trainee->name }} ({{ $trainee->email }})
+                                        Student: {{ $trainee->name }} ({{ $trainee->email }})
                                     </option>
                                 @endforeach
                             </select>

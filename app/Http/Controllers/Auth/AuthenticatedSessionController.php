@@ -40,6 +40,17 @@ class AuthenticatedSessionController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard($userType)->attempt($credentials)) {
+            // Check if trainee account is still pending
+            if ($userType === 'trainee') {
+                $trainee = Auth::guard('trainee')->user();
+                if ($trainee->status === 'pending') {
+                    Auth::guard('trainee')->logout();
+                    return back()->withErrors([
+                        'email' => 'Your account is still pending approval. Please wait for admin approval.',
+                    ])->withInput();
+                }
+            }
+
             $request->session()->regenerate();
 
             return match ($userType) {

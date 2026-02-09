@@ -1,30 +1,59 @@
-@extends('layouts.admin')
+@php
+    $layout = auth()->guard('trainer')->check()
+        ? 'layouts.trainer'
+        : 'layouts.admin';
+@endphp
+
+@extends($layout)
 
 @section('content')
     <div class="col-md-10 p-4" style="background: #f4f5f7">
-        <div class="card shadow-sm rounded">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">👁️ View Subject</h4>
-                <a href="{{ route('admin.users.subjects.index') }}" class="btn btn-light btn-sm">← Back</a>
-            </div>
+
+        <h2 class="mb-4">Subject Details</h2>
+
+        {{-- Subject Info --}}
+        <div class="card mb-4">
             <div class="card-body">
-                <div class="mb-4">
-                    <h6 class="text-muted">Date:</h6>
-                    <p class="fs-5">{{ $subject->date }}</p>
-                </div>
 
-                <div class="mb-4">
-                    <h6 class="text-muted">Title:</h6>
-                    <p class="fs-5 fw-semibold">{{ $subject->title }}</p>
-                </div>
+                <h4 class="d-flex justify-content-between align-items-center">
+                    <span>{{ $subject->title }}</span>
 
-                <div class="mb-4">
-                    <h6 class="text-muted">Description:</h6>
-                    <div class="border rounded p-3 bg-white">
-                        {!! $subject->description !!}
-                    </div>
-                </div>
+                    @if($subject->session && $subject->session->link)
+                        <a href="{{ $subject->session->link }}"
+                           class="btn btn-success"
+                           target="_blank">
+                            Join The Session
+                        </a>
+                    @endif
+                </h4>
+
+                <hr>
+
+                <p><strong>Date:</strong> {{ $subject->date }}</p>
+
+                <p><strong>Session:</strong> {{ $subject->session->title ?? 'N/A' }}</p>
+
+                <p class="text-danger">
+                    <strong>Time:</strong>
+                    {{ \Carbon\Carbon::parse($subject->session->time_from)->format('g:i A') }}
+                    -
+                    {{ \Carbon\Carbon::parse($subject->session->time_to)->format('g:i A') }}
+                </p>
+
+                <p><strong>Description:</strong></p>
+                <div>{!! $subject->description !!}</div>
+
             </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{{ url()->previous() ?: route('trainer.dashboard') }}" class="btn btn-secondary">← Back</a>
+
+            @if(auth()->guard('trainer')->check() && $subject->attendances_count === 0)
+                <a href="{{ route('trainer.attendance.create', $subject->id) }}" class="btn btn-outline-primary">
+                    <i class="bi bi-clipboard-check me-1"></i> Take Attendance
+                </a>
+            @endif
         </div>
     </div>
 @endsection

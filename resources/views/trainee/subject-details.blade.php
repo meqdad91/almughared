@@ -27,9 +27,9 @@
 
                 <p class="text-danger">
                     <strong>Time:</strong>
-                    {{ \Carbon\Carbon::parse($subject->session->time_from)->format('H:i') }}
+                    {{ \Carbon\Carbon::parse($subject->session->time_from)->format('g:i A') }}
                     -
-                    {{ \Carbon\Carbon::parse($subject->session->time_to)->format('H:i') }}
+                    {{ \Carbon\Carbon::parse($subject->session->time_to)->format('g:i A') }}
                 </p>
 
                 <p><strong>Description:</strong></p>

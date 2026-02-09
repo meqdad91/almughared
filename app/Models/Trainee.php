@@ -13,7 +13,7 @@ class Trainee extends Authenticatable
 
     protected $guard = 'trainee';
 
-    protected $fillable = ['name', 'email', 'password', 'gender', 'birthdate', 'avatar', 'phone'];
+    protected $fillable = ['name', 'email', 'password', 'status', 'gender', 'birthdate', 'avatar', 'phone'];
 
     public function sessions()
     {
@@ -28,5 +28,10 @@ class Trainee extends Authenticatable
     public function receivedMessages()
     {
         return $this->morphMany(Message::class, 'receiver');
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
     }
 }

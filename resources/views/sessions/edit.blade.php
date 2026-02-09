@@ -42,9 +42,9 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Trainer:</label>
+                <label class="form-label">Teacher:</label>
                 <select name="trainer_id" class="form-select" required>
-                    <option value="">-- Select Trainer --</option>
+                    <option value="">-- Select Teacher --</option>
                     @foreach ($trainers as $trainer)
                         <option value="{{ $trainer->id }}" {{ old('trainer_id', $session->trainer_id) == $trainer->id ? 'selected' : '' }}>
                             {{ $trainer->name }}
@@ -54,7 +54,7 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Trainees:</label>
+                <label class="form-label">Students:</label>
                 <select name="trainees[]" class="form-select" multiple required>
                     @foreach ($trainees as $trainee)
                         <option value="{{ $trainee->id }}"

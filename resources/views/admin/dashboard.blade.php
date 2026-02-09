@@ -17,13 +17,13 @@
 
         <!-- Stats Cards Row -->
         <div class="row g-4 mb-4">
-            <!-- Trainees Card -->
+            <!-- Students Card -->
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm h-100 overflow-hidden">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <p class="text-uppercase text-muted fw-bold small mb-1">Total Trainees</p>
+                                <p class="text-uppercase text-muted fw-bold small mb-1">Total Students</p>
                                 <h2 class="fw-bold mb-0 text-primary">{{ $counts['trainees'] }}</h2>
                             </div>
                             <div class="bg-primary bg-opacity-10 p-2 rounded">
@@ -34,19 +34,19 @@
                     <div class="card-footer bg-white border-0 py-2">
                         <a href="{{ route('admin.users.trainees.index') }}"
                             class="text-decoration-none small text-muted hover-link">
-                            View all trainees <i class="bi bi-arrow-right ms-1"></i>
+                            View all students <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Trainers Card -->
+            <!-- Teachers Card -->
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm h-100 overflow-hidden">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <p class="text-uppercase text-muted fw-bold small mb-1">Total Trainers</p>
+                                <p class="text-uppercase text-muted fw-bold small mb-1">Total Teachers</p>
                                 <h2 class="fw-bold mb-0 text-success">{{ $counts['trainers'] }}</h2>
                             </div>
                             <div class="bg-success bg-opacity-10 p-2 rounded">
@@ -57,7 +57,7 @@
                     <div class="card-footer bg-white border-0 py-2">
                         <a href="{{ route('admin.users.trainers.index') }}"
                             class="text-decoration-none small text-muted hover-link">
-                            View all trainers <i class="bi bi-arrow-right ms-1"></i>
+                            View all teachers <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
                                 <thead class="bg-light text-muted small text-uppercase">
                                     <tr>
                                         <th class="ps-4">Title</th>
-                                        <th>Trainer</th>
+                                        <th>Teacher</th>
                                         <th>Time</th>
                                         <th class="text-end pe-4">Actions</th>
                                     </tr>

@@ -3,9 +3,9 @@
 @section('content')
     <div class="col-md-10 p-4" style="background: #f4f5f7">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="mb-0">👤 User Management - Admin</h3>
-            <a href="{{ route('admin.users.admins.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-1"></i> Add Admin
+            <h3 class="mb-0">👤 User Management - QA</h3>
+            <a href="{{ route('admin.users.qas.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Add QA
             </a>
         </div>
 
@@ -31,12 +31,12 @@
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
                                     {{-- Edit Button --}}
-                                    <a href="{{ route('admin.users.admins.edit', $admin->id) }}" class="btn btn-sm btn-warning px-3">
+                                    <a href="{{ route('admin.users.qas.edit', $admin->id) }}" class="btn btn-sm btn-warning px-3">
                                         ✏️ Edit
                                     </a>
 
                                     {{-- Delete Form --}}
-                                    <form action="{{ route('admin.users.admins.destroy', $admin->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                                    <form action="{{ route('admin.users.qas.destroy', $admin->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger px-3">
@@ -56,7 +56,7 @@
             </div>
         @else
             <div class="alert alert-info shadow-sm rounded py-3 px-4">
-                No users found. Click <strong>Add Admin</strong> to create one.
+                No users found. Click <strong>Add QA</strong> to create one.
             </div>
         @endif
     </div>

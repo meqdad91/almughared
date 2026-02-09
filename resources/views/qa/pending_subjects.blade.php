@@ -19,7 +19,7 @@
                     </thead>
                     <tbody>
                         @foreach ($subjects as $subject)
-                            <tr>
+                            <tr class="clickable-row" data-href="{{ route('qa.subjects.show', $subject->id) }}" style="cursor: pointer;">
                                 <td class="fw-bold">{{ $subject->id }}</td>
                                 <td>{{ $subject->date }}</td>
                                 <td>{{ $subject->title }}</td>
@@ -29,50 +29,9 @@
                                     <span class="badge bg-warning text-dark">{{ $subject->status }}</span>
                                 </td>
                                 <td>
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <!-- Approve Form -->
-                                        <form action="{{ route('qa.subjects.approve', $subject->id) }}" method="POST"
-                                            onsubmit="return confirm('Approve this subject for Admin review?');">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-success">
-                                                <i class="bi bi-check-lg"></i> Approve
-                                            </button>
-                                        </form>
-
-                                        <!-- Reject Button (Trigger Modal) -->
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#rejectModal{{ $subject->id }}">
-                                            <i class="bi bi-x-lg"></i> Reject
-                                        </button>
-                                    </div>
-
-                                    <!-- Reject Modal -->
-                                    <div class="modal fade" id="rejectModal{{ $subject->id }}" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <form action="{{ route('qa.subjects.reject', $subject->id) }}" method="POST">
-                                                @csrf
-                                                <div class="modal-content text-start">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Reject Subject: {{ $subject->title }}</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Rejection Reason</label>
-                                                            <textarea name="rejection_reason" class="form-control" rows="3"
-                                                                required></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Cancel</button>
-                                                        <button type="submit" class="btn btn-danger">Reject Topic</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
+                                    <a href="{{ route('qa.subjects.show', $subject->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -89,4 +48,16 @@
             </div>
         @endif
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.clickable-row').forEach(row => {
+                row.addEventListener('click', function (e) {
+                    if (!e.target.closest('a, button')) {
+                        window.location.href = this.dataset.href;
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

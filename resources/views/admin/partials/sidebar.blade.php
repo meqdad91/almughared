@@ -49,14 +49,14 @@
                     <li class="nav-item">
                         <a class="nav-link {{ isActive('admin.users.trainers.*') }}"
                             href="{{ route('admin.users.trainers.index') }}">
-                            👨‍🏫 Trainers
+                            👨‍🏫 Teachers
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link {{ isActive('admin.users.trainees.*') }}"
                             href="{{ route('admin.users.trainees.index') }}">
-                            👨‍🎓 Trainees
+                            👨‍🎓 Students
                         </a>
                     </li>
 
@@ -90,6 +90,13 @@
         <li class="nav-item">
             <a class="nav-link {{ isActive('admin.users.reviews.*') }}" href="{{ route('admin.users.reviews.index') }}">
                 📝 Reviews
+            </a>
+        </li>
+
+        {{-- Attendance --}}
+        <li class="nav-item">
+            <a class="nav-link {{ isActive('admin.users.attendance.*') }}" href="{{ route('admin.users.attendance.index') }}">
+                📋 Attendance
             </a>
         </li>
 
