@@ -1,49 +1,50 @@
 @extends('layouts.trainee')
 
 @section('content')
-    <div class="col-md-10 p-4" style="background: #f4f5f7">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="mb-0">📚 Subject Management</h3>
-        </div>
-
-        @if ($subjects->count())
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered align-middle text-center shadow-sm rounded overflow-hidden">
-                    <thead class="table-dark">
-                        <tr>
-                            <th style="width: 5%">ID</th>
-                            <th style="width: 10%">Date</th>
-                            <th style="width: 25%">Title</th>
-                            <th style="width: 40%">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                        @foreach ($subjects as $subject)
-                            <tr class="clickable-row" data-href="{{ route('trainee.session.show', $subject->id) }}"
-                                style="cursor: pointer;">
-                                <td class="fw-bold">{{ $subject->id }}</td>
-                                <td>{{ $subject->date }}</td>
-                                <td>{{ $subject->title }}</td>
-                                <td>{!! \Illuminate\Support\Str::limit($subject->description, 50)  !!}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="mt-4">
-                {{ $subjects->links() }}
-            </div>
-        @else
-            <div class="alert alert-info shadow-sm rounded py-3 px-4">
-                No subjects found. Click <strong>Add Subject</strong> to create one.
-            </div>
-        @endif
+    <div class="page-header">
+        <h2>My Sessions</h2>
     </div>
+
+    @if ($subjects->count())
+        <div class="m-card">
+            <div class="m-card-body-flush">
+                <div class="table-responsive">
+                    <table class="m-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width:60px">#</th>
+                                <th style="width:110px">Date</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($subjects as $subject)
+                                <tr class="clickable-row" data-href="{{ route('trainee.session.show', $subject->id) }}">
+                                    <td class="text-center fw-semibold">{{ $subject->id }}</td>
+                                    <td>{{ $subject->date }}</td>
+                                    <td class="fw-semibold" style="color:#2b1a40;">{{ $subject->title }}</td>
+                                    <td>{!! \Illuminate\Support\Str::limit(strip_tags($subject->description), 60) !!}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">{{ $subjects->links() }}</div>
+    @else
+        <div class="m-card">
+            <div class="empty-state">
+                <div class="empty-state-icon">&#128218;</div>
+                <p>No subjects available yet.</p>
+            </div>
+        </div>
+    @endif
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const rows = document.querySelectorAll('.clickable-row');
-            rows.forEach(row => {
+            document.querySelectorAll('.clickable-row').forEach(function(row) {
                 row.addEventListener('click', function () {
                     window.location.href = this.dataset.href;
                 });

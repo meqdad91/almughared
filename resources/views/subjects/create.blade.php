@@ -6,47 +6,54 @@
 
 @extends($layout)
 
-
 @section('content')
-    <div class="col-md-10 p-4" style="background: #f4f5f7">
-        <h3 class="mb-4">➕ Add New Subject</h3>
-
-        <form action="{{ auth()->guard('trainer')->check() ? route('trainer.subjects.store') : route('admin.users.subjects.store') }}" method="POST">
-            @csrf
-
-            <input type="hidden" name="session_id" value="{{ $sessions[0]->id }}">
-            <div class="mb-3">
-                <label class="form-label">Date:</label>
-                <input type="date" name="date" class="form-control" required value="{{ old('date') }}">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Title:</label>
-                <input type="text" name="title" class="form-control" required value="{{ old('title') }}">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Description:</label>
-                <textarea name="description" class="form-control" id="editor" rows="6">{{ old('description') }}</textarea>
-            </div>
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+    <div class="page-header">
+        <h2>Add New Subject</h2>
+        <div class="page-actions">
+            @if(auth()->guard('trainer')->check())
+                <a href="{{ route('trainer.subjects.active', ['session' => $sessions[0]->id]) }}" class="btn btn-app btn-app-light btn-app-sm">&larr; Back</a>
+            @else
+                <a href="{{ route('admin.users.subjects.index') }}" class="btn btn-app btn-app-light btn-app-sm">&larr; Back</a>
             @endif
-            <div class="d-flex justify-content-between">
-                <a href="{{ auth()->guard('trainer')->check()
-                    ? route('trainer.subjects.active', ['session' => $sessions[0]->id ])
-                    : route('admin.users.subjects.index')
-                }}" class="btn btn-secondary">← Back</a>
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-save me-1"></i> Save Subject
-                </button>
+        </div>
+    </div>
+
+    @if ($errors->any())
+        <div class="m-alert m-alert-danger mb-3">
+            <ul class="mb-0 ps-3">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="m-card">
+                <div class="m-card-body m-form">
+                    <form action="{{ auth()->guard('trainer')->check() ? route('trainer.subjects.store') : route('admin.users.subjects.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="session_id" value="{{ $sessions[0]->id }}">
+
+                        <div class="mb-3">
+                            <label class="form-label">Date</label>
+                            <input type="date" name="date" class="form-control" required value="{{ old('date') }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" required value="{{ old('title') }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" id="editor" rows="6">{{ old('description') }}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-app btn-app-primary">Save Subject</button>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 @endsection
 

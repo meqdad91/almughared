@@ -10,6 +10,7 @@ use App\Http\Controllers\TraineeController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\WeeklyPlanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -73,6 +74,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/reviews', [SubjectReviewController::class, 'store'])->name('reviews.store');
             Route::put('/reviews/{review}', [SubjectReviewController::class, 'update'])->name('reviews.update');
             Route::delete('/reviews/{review}', [SubjectReviewController::class, 'destroy'])->name('reviews.destroy');
+
+            Route::get('weekly-plans/pending', [WeeklyPlanController::class, 'pendingForAdmin'])->name('weekly-plans.pending');
+            Route::get('weekly-plans/{weeklyPlan}', [WeeklyPlanController::class, 'showForAdmin'])->name('weekly-plans.show');
+            Route::post('weekly-plans/{weeklyPlan}/approve', [WeeklyPlanController::class, 'approve'])->name('weekly-plans.approve');
+            Route::post('weekly-plans/{weeklyPlan}/decline', [WeeklyPlanController::class, 'decline'])->name('weekly-plans.decline');
         });
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     });
@@ -99,6 +105,11 @@ Route::prefix('qa')->name('qa.')->group(function () {
         Route::get('subject/{subject}', [QaController::class, 'showSubject'])->name('subjects.show');
         Route::post('subject/{subject}/approve', [QaController::class, 'approveSubject'])->name('subjects.approve');
         Route::post('subject/{subject}/reject', [QaController::class, 'rejectSubject'])->name('subjects.reject');
+
+        Route::get('weekly-plans/pending', [WeeklyPlanController::class, 'pendingForQa'])->name('weekly-plans.pending');
+        Route::get('weekly-plans/{weeklyPlan}', [WeeklyPlanController::class, 'showForQa'])->name('weekly-plans.show');
+        Route::post('weekly-plans/{weeklyPlan}/approve', [WeeklyPlanController::class, 'approve'])->name('weekly-plans.approve');
+        Route::post('weekly-plans/{weeklyPlan}/decline', [WeeklyPlanController::class, 'decline'])->name('weekly-plans.decline');
     });
 });
 Route::prefix('trainer')->name('trainer.')->group(function () {
@@ -112,6 +123,12 @@ Route::prefix('trainer')->name('trainer.')->group(function () {
         Route::resource('subjects', SubjectController::class);
         Route::get('subject/{subject}/attendance', [AttendanceController::class, 'showAttendanceForm'])->name('attendance.create');
         Route::post('subject/{subject}/attendance', [AttendanceController::class, 'storeAttendance'])->name('attendance.store');
+
+        Route::get('weekly-plans', [WeeklyPlanController::class, 'index'])->name('weekly-plans.index');
+        Route::get('weekly-plans/template', [WeeklyPlanController::class, 'downloadTemplate'])->name('weekly-plans.template');
+        Route::get('weekly-plans/upload/{session}', [WeeklyPlanController::class, 'create'])->name('weekly-plans.create');
+        Route::post('weekly-plans/upload/{session}', [WeeklyPlanController::class, 'store'])->name('weekly-plans.store');
+        Route::get('weekly-plans/{weeklyPlan}', [WeeklyPlanController::class, 'show'])->name('weekly-plans.show');
     });
 });
 

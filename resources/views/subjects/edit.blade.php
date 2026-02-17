@@ -1,66 +1,71 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="col-md-10 p-4" style="background: #f4f5f7">
-        <h3 class="mb-4">✏️ Edit Subject</h3>
+    <div class="page-header">
+        <h2>Edit Subject</h2>
+        <div class="page-actions">
+            <a href="{{ auth()->guard('trainer')->check() ? route('trainer.subjects.index') : route('admin.users.subjects.index') }}" class="btn btn-app btn-app-light btn-app-sm">&larr; Back</a>
+        </div>
+    </div>
 
-        @if($subject->status === 'rejected_qa' || $subject->status === 'rejected_admin')
-            <div class="alert alert-danger">
-                <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Subject Rejected</h5>
-                <p>This subject was returned for the following reason:</p>
-                <p class="mb-0 fw-bold">"{{ $subject->rejection_reason }}"</p>
-                <hr>
-                <p class="mb-0 small">Please update the details below to resubmit for approval.</p>
-            </div>
-        @elseif($subject->status === 'pending_qa')
-            <div class="alert alert-warning">
-                <i class="bi bi-hourglass-split"></i> This subject is currently awaiting QA approval.
-            </div>
-        @elseif($subject->status === 'pending_admin')
-            <div class="alert alert-info">
-                <i class="bi bi-hourglass-split"></i> This subject is approved by QA and is awaiting Admin final approval.
-            </div>
-        @endif
+    @if($subject->status === 'rejected_qa' || $subject->status === 'rejected_admin')
+        <div class="m-alert m-alert-danger mb-3">
+            <strong>Subject Rejected</strong><br>
+            This subject was returned for the following reason:<br>
+            <strong>"{{ $subject->rejection_reason }}"</strong><br>
+            <small>Please update the details below to resubmit for approval.</small>
+        </div>
+    @elseif($subject->status === 'pending_qa')
+        <div class="m-alert m-alert-warning mb-3">
+            This subject is currently awaiting QA approval.
+        </div>
+    @elseif($subject->status === 'pending_admin')
+        <div class="m-alert m-alert-info mb-3">
+            This subject is approved by QA and is awaiting Admin final approval.
+        </div>
+    @endif
 
-        <form action="{{ auth()->guard('trainer')->check() ? route('trainer.subjects.update', $subject->id) : route('admin.users.subjects.update', $subject->id) }}" method="POST">
-            @csrf
-            @method('PUT')
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="m-card">
+                <div class="m-card-body m-form">
+                    <form action="{{ auth()->guard('trainer')->check() ? route('trainer.subjects.update', $subject->id) : route('admin.users.subjects.update', $subject->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
 
-            <input type="hidden" name="session_id" value="{{ old('session_id', $subject->session_id) }}">
+                        <input type="hidden" name="session_id" value="{{ old('session_id', $subject->session_id) }}">
 
-            <div class="mb-3">
-                <label class="form-label">Date:</label>
-                <input type="date" name="date" class="form-control" required value="{{ old('date', $subject->date) }}">
-            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date</label>
+                            <input type="date" name="date" class="form-control" required value="{{ old('date', $subject->date) }}">
+                        </div>
 
-            <div class="mb-3">
-                <label class="form-label">Title:</label>
-                <input type="text" name="title" class="form-control" required value="{{ old('title', $subject->title) }}">
-            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" required value="{{ old('title', $subject->title) }}">
+                        </div>
 
-            <div class="mb-3">
-                <label class="form-label">Description:</label>
-                <textarea name="description" class="form-control" id="editor"
-                    rows="6">{{ old('description', $subject->description) }}</textarea>
-            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" id="editor"
+                                rows="6">{{ old('description', $subject->description) }}</textarea>
+                        </div>
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+                        @if ($errors->any())
+                            <div class="m-alert m-alert-danger mb-3">
+                                <ul class="mb-0 ps-3">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <button type="submit" class="btn btn-app btn-app-primary">Update Subject</button>
+                    </form>
                 </div>
-            @endif
-
-            <div class="d-flex justify-content-between">
-                <a href="{{ auth()->guard('trainer')->check() ? route('trainer.subjects.index') : route('admin.users.subjects.index') }}" class="btn btn-secondary">← Back</a>
-                <button type="submit" class="btn btn-success">
-                    <i class="bi bi-check-circle me-1"></i> Update Subject
-                </button>
             </div>
-        </form>
+        </div>
     </div>
 @endsection
 

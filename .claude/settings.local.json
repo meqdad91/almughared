@@ -4,7 +4,12 @@
       "WebFetch(domain:127.0.0.1)",
       "Bash(php artisan make:migration:*)",
       "Bash(php artisan migrate:*)",
-      "Bash(php artisan:*)"
+      "Bash(php artisan:*)",
+      "Bash(composer require:*)",
+      "Bash(for f in resources/views/trainer/subjects.blade.php resources/views/trainer/attendance.blade.php resources/views/trainer/session_students.blade.php resources/views/trainer/active_sessions.blade.php resources/views/trainer/pending_subjects.blade.php resources/views/trainer/pending_sessions.blade.php resources/views/trainer/weekly_plans/index.blade.php resources/views/trainer/weekly_plans/create.blade.php resources/views/trainer/weekly_plans/show.blade.php resources/views/trainee/attendance.blade.php resources/views/trainee/sessions.blade.php resources/views/trainee/session-details.blade.php resources/views/trainee/subject-details.blade.php resources/views/trainer/dashboard.blade.php resources/views/trainee/dashboard.blade.php)",
+      "Bash(do sed -i 's|<div class=\"\"col-md-10 p-4\"\" style=\"\"background: #f4f5f7\"\">|<div>|g' \"$f\")",
+      "Bash(echo:*)",
+      "Bash(done)"
     ]
   }
 }

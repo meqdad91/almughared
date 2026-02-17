@@ -27,5 +27,10 @@ class Session extends Model
     {
         return $this->hasMany(Subject::class);
     }
+
+    public function weeklyPlans()
+    {
+        return $this->hasMany(WeeklyPlan::class);
+    }
 }
 

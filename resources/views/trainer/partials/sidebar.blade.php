@@ -20,6 +20,9 @@
             <a class="nav-link {{ isActive(['trainer.session.pending', 'trainer.subjects.pending*']) }}" href="{{ route('trainer.session.pending') }}">🕒 Pending Sessions</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link {{ isActive('trainer.weekly-plans.*') }}" href="{{ route('trainer.weekly-plans.index') }}">📋 Weekly Plans</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link {{ isActive('messages.*') }}" href="{{ route('messages.index') }}">
                 💬 Messages
                 @php

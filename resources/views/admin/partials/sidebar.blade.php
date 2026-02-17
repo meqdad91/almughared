@@ -86,6 +86,14 @@
             </a>
         </li>
 
+        {{-- Weekly Plans --}}
+        <li class="nav-item">
+            <a class="nav-link {{ isActive('admin.users.weekly-plans.*') }}"
+                href="{{ route('admin.users.weekly-plans.pending') }}">
+                📋 Pending Plans
+            </a>
+        </li>
+
         {{-- Reviews --}}
         <li class="nav-item">
             <a class="nav-link {{ isActive('admin.users.reviews.*') }}" href="{{ route('admin.users.reviews.index') }}">

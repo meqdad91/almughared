@@ -1,215 +1,108 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="col-md-10 p-4" style="background: #f4f5f7; min-height: 100vh;">
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h3 class="fw-bold text-dark mb-1">Dashboard Overview</h3>
-                <p class="text-muted mb-0">Welcome back, {{ Auth::user()->name }} 👋</p>
-            </div>
-            <div class="d-flex gap-2">
-                <a href="{{ route('admin.users.sessions.create') }}" class="btn btn-primary shadow-sm">
-                    <i class="bi bi-plus-lg me-1"></i> New Session
-                </a>
+    <div class="page-header">
+        <h2>Dashboard Overview</h2>
+        <div class="page-actions">
+            <a href="{{ route('admin.users.sessions.create') }}" class="btn btn-app btn-app-primary btn-app-sm">+ New Session</a>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card stat-primary">
+                <div class="stat-icon">&#128101;</div>
+                <div class="stat-value">{{ $counts['trainees'] }}</div>
+                <div class="stat-label">Students</div>
             </div>
         </div>
-
-        <!-- Stats Cards Row -->
-        <div class="row g-4 mb-4">
-            <!-- Students Card -->
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100 overflow-hidden">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-uppercase text-muted fw-bold small mb-1">Total Students</p>
-                                <h2 class="fw-bold mb-0 text-primary">{{ $counts['trainees'] }}</h2>
-                            </div>
-                            <div class="bg-primary bg-opacity-10 p-2 rounded">
-                                <i class="bi bi-people-fill text-primary fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-white border-0 py-2">
-                        <a href="{{ route('admin.users.trainees.index') }}"
-                            class="text-decoration-none small text-muted hover-link">
-                            View all students <i class="bi bi-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Teachers Card -->
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100 overflow-hidden">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-uppercase text-muted fw-bold small mb-1">Total Teachers</p>
-                                <h2 class="fw-bold mb-0 text-success">{{ $counts['trainers'] }}</h2>
-                            </div>
-                            <div class="bg-success bg-opacity-10 p-2 rounded">
-                                <i class="bi bi-person-video3 text-success fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-white border-0 py-2">
-                        <a href="{{ route('admin.users.trainers.index') }}"
-                            class="text-decoration-none small text-muted hover-link">
-                            View all teachers <i class="bi bi-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- QA Card -->
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100 overflow-hidden">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-uppercase text-muted fw-bold small mb-1">Quality Assurance</p>
-                                <h2 class="fw-bold mb-0 text-warning">{{ $counts['qas'] }}</h2>
-                            </div>
-                            <div class="bg-warning bg-opacity-10 p-2 rounded">
-                                <i class="bi bi-shield-check text-warning fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-white border-0 py-2">
-                        <a href="{{ route('admin.users.qas.index') }}"
-                            class="text-decoration-none small text-muted hover-link">
-                            View all QAs <i class="bi bi-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sessions Card -->
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100 overflow-hidden">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-uppercase text-muted fw-bold small mb-1">Total Sessions</p>
-                                <h2 class="fw-bold mb-0 text-info">{{ $counts['sessions'] }}</h2>
-                            </div>
-                            <div class="bg-info bg-opacity-10 p-2 rounded">
-                                <i class="bi bi-calendar-event text-info fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-white border-0 py-2">
-                        <a href="{{ route('admin.users.sessions.index') }}"
-                            class="text-decoration-none small text-muted hover-link">
-                            Manage sessions <i class="bi bi-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-success">
+                <div class="stat-icon">&#128104;&#8205;&#127979;</div>
+                <div class="stat-value">{{ $counts['trainers'] }}</div>
+                <div class="stat-label">Teachers</div>
             </div>
         </div>
-
-        <div class="row g-4">
-            <!-- Recent Sessions Table -->
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 fw-bold">📅 Upcoming/Recent Sessions</h5>
-                        <a href="{{ route('admin.users.sessions.index') }}" class="btn btn-sm btn-outline-primary">View
-                            All</a>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="bg-light text-muted small text-uppercase">
-                                    <tr>
-                                        <th class="ps-4">Title</th>
-                                        <th>Teacher</th>
-                                        <th>Time</th>
-                                        <th class="text-end pe-4">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($recentSessions as $session)
-                                        <tr>
-                                            <td class="ps-4 fw-medium">{{ $session->title }}</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-sm bg-light rounded-circle me-2 d-flex align-items-center justify-content-center text-primary fw-bold"
-                                                        style="width: 32px; height: 32px;">
-                                                        {{ substr($session->trainer->name ?? 'T', 0, 1) }}
-                                                    </div>
-                                                    <span>{{ $session->trainer->name ?? 'Unknown' }}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-light text-dark border">
-                                                    {{ \Carbon\Carbon::parse($session->time_from)->format('g:i A') }}
-                                                </span>
-                                            </td>
-                                            <td class="text-end pe-4">
-                                                <a href="{{ route('admin.users.sessions.edit', $session->id) }}"
-                                                    class="btn btn-sm btn-light">Edit</a>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="4" class="text-center py-4 text-muted">No sessions found.</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-warning">
+                <div class="stat-icon">&#128737;</div>
+                <div class="stat-value">{{ $counts['qas'] }}</div>
+                <div class="stat-label">Quality Assurance</div>
             </div>
-
-            <!-- Recent Reviews -->
-            <div class="col-lg-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white py-3 border-0">
-                        <h5 class="mb-0 fw-bold">⭐ Recent Reviews</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-                            @forelse($recentReviews as $review)
-                                <div class="list-group-item px-0 border-0 mb-3">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-0 fw-bold">{{ $review->trainee->name ?? 'Student' }}</h6>
-                                            <small class="text-muted">{{ $review->subject->name ?? 'Subject' }}</small>
-                                        </div>
-                                        <span class="badge bg-warning text-dark rounded-pill">
-                                            <i class="bi bi-star-fill small"></i> {{ $review->rating ?? 5 }}
-                                        </span>
-                                    </div>
-                                    <p class="mb-1 text-muted small text-truncate" style="max-width: 100%;">
-                                        "{{ $review->comment ?? 'No comment provided.' }}"
-                                    </p>
-                                </div>
-                            @empty
-                                <div class="text-center py-4 text-muted">No reviews yet.</div>
-                            @endforelse
-                        </div>
-                    </div>
-                </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-total">
+                <div class="stat-icon">&#128197;</div>
+                <div class="stat-value">{{ $counts['sessions'] }}</div>
+                <div class="stat-label">Sessions</div>
             </div>
         </div>
     </div>
 
-    <style>
-        .hover-link:hover {
-            color: var(--bs-primary) !important;
-            text-decoration: underline !important;
-        }
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="m-card">
+                <div class="m-card-header d-flex justify-content-between align-items-center">
+                    <h3>Recent Sessions</h3>
+                    <a href="{{ route('admin.users.sessions.index') }}" class="btn btn-app btn-app-outline btn-app-sm">View All</a>
+                </div>
+                <div class="m-card-body-flush">
+                    <div class="table-responsive">
+                        <table class="m-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Teacher</th>
+                                    <th class="text-center">Time</th>
+                                    <th class="text-center" style="width:80px"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($recentSessions as $session)
+                                    <tr>
+                                        <td class="fw-semibold" style="color:#2b1a40;">{{ $session->title }}</td>
+                                        <td>{{ $session->trainer->name ?? 'Unknown' }}</td>
+                                        <td class="text-center">
+                                            <span class="time-badge">{{ \Carbon\Carbon::parse($session->time_from)->format('g:i A') }}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{ route('admin.users.sessions.edit', $session->id) }}" class="btn btn-app btn-app-light btn-app-sm">Edit</a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr><td colspan="4" class="text-center text-muted py-4">No sessions found.</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        .card {
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-        }
-    </style>
+        <div class="col-lg-4">
+            <div class="m-card h-100">
+                <div class="m-card-header">
+                    <h3>Recent Reviews</h3>
+                </div>
+                <div class="m-card-body">
+                    @forelse($recentReviews as $review)
+                        <div class="review-item">
+                            <div class="review-avatar">{{ substr($review->trainee->name ?? 'S', 0, 1) }}</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold" style="color:#2b1a40;">{{ $review->trainee->name ?? 'Student' }}</div>
+                                <div class="text-muted" style="font-size:0.82rem;">{{ $review->subject->title ?? 'Subject' }}</div>
+                                <div class="star-rating mt-1">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <span class="star {{ $i <= ($review->rate ?? 5) ? 'filled' : '' }}">&#9733;</span>
+                                    @endfor
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center text-muted py-4">No reviews yet.</div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

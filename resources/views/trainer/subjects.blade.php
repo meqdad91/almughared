@@ -1,95 +1,85 @@
 @extends('layouts.trainer')
 
 @section('content')
-    <div class="col-md-10 p-4" style="background: #f4f5f7">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="mb-0">📚 Subject Management</h3>
+    @if(session('success'))
+        <div class="m-alert m-alert-success mb-3">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+        <div class="m-alert m-alert-danger mb-3">{{ session('error') }}</div>
+    @endif
+
+    <div class="page-header">
+        <h2>Subject Management</h2>
+        <div class="page-actions">
             <a href="{{ route('trainer.subjects.create', ['session_id' => request('session_id')]) }}"
-                class="btn btn-primary">
-                <i class="bi bi-plus-circle me-1"></i> Add Subject
+                class="btn btn-app btn-app-primary">
+                + Add Subject
             </a>
         </div>
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form method="GET" action="{{ route('trainer.subjects.active', $session->id) }}" class="mb-4">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search by title or date..." value="{{ request('search') }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i> Search
-                </button>
-                @if(request('search'))
-                    <a href="{{ route('trainer.subjects.active', $session->id) }}" class="btn btn-outline-secondary">Clear</a>
-                @endif
-            </div>
-        </form>
-
-        @if ($subjects->count())
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered align-middle text-center shadow-sm rounded overflow-hidden">
-                    <thead class="table-dark">
-                        <tr>
-                            <th style="width: 5%">ID</th>
-                            <th style="width: 10%">Date</th>
-                            <th style="width: 20%">Title</th>
-                            <th style="width: 35%">Description</th>
-                            <th style="width: 15%">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                        @foreach ($subjects as $subject)
-                            <tr>
-                                <td class="fw-bold">
-                                    <a href="{{ route('trainer.subjects.show', $subject->id) }}" class="text-decoration-none">
-                                        {{ $subject->id }}
-                                    </a>
-                                </td>
-                                <td>{{ $subject->date }}</td>
-                                <td>{{ $subject->title }}</td>
-                                <td>{!! \Illuminate\Support\Str::limit($subject->description, 50)  !!}</td>
-                                <td>
-                                    @if($subject->attendances_count === 0)
-                                        <a href="{{ route('trainer.attendance.create', $subject->id) }}" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-clipboard-check me-1"></i> Attendance
-                                        </a>
-                                    @else
-                                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Done</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="mt-4">
-                {{ $subjects->links() }}
-            </div>
-        @else
-            <div class="alert alert-info shadow-sm rounded py-3 px-4">
-                No subjects found. Click <strong>Add Subject</strong> to create one.
-            </div>
-        @endif
     </div>
+
+    <div class="search-bar">
+        <form method="GET" action="{{ route('trainer.subjects.active', $session->id) }}" class="d-flex gap-2 flex-fill">
+            <input type="text" name="search" class="form-control" placeholder="Search by title or date..." value="{{ request('search') }}">
+            <button type="submit" class="btn btn-app btn-app-primary btn-app-sm">Search</button>
+            @if(request('search'))
+                <a href="{{ route('trainer.subjects.active', $session->id) }}" class="btn btn-app btn-app-light btn-app-sm">Clear</a>
+            @endif
+        </form>
+    </div>
+
+    @if ($subjects->count())
+        <div class="m-card">
+            <div class="m-card-body-flush">
+                <div class="table-responsive">
+                    <table class="m-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width:60px">#</th>
+                                <th style="width:110px">Date</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th class="text-center" style="width:140px">Attendance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($subjects as $subject)
+                                <tr>
+                                    <td class="text-center fw-semibold">
+                                        <a href="{{ route('trainer.subjects.show', $subject->id) }}" class="text-decoration-none" style="color: #5f63f2;">
+                                            {{ $subject->id }}
+                                        </a>
+                                    </td>
+                                    <td>{{ $subject->date }}</td>
+                                    <td class="fw-semibold">
+                                        <a href="{{ route('trainer.subjects.show', $subject->id) }}" class="text-decoration-none" style="color: #2b1a40;">
+                                            {{ $subject->title }}
+                                        </a>
+                                    </td>
+                                    <td>{!! \Illuminate\Support\Str::limit(strip_tags($subject->description), 50) !!}</td>
+                                    <td class="text-center">
+                                        @if($subject->attendances_count === 0)
+                                            <a href="{{ route('trainer.attendance.create', $subject->id) }}" class="btn btn-app btn-app-outline btn-app-sm">
+                                                Take Attendance
+                                            </a>
+                                        @else
+                                            <span class="status-badge status-approved">Done</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">{{ $subjects->links() }}</div>
+    @else
+        <div class="m-card">
+            <div class="empty-state">
+                <div class="empty-state-icon">&#128218;</div>
+                <p>No subjects found. Click <strong>Add Subject</strong> to create one.</p>
+            </div>
+        </div>
+    @endif
 @endsection

@@ -19,6 +19,11 @@ class Trainer extends Authenticatable
         return $this->hasMany(Session::class);
     }
 
+    public function weeklyPlans()
+    {
+        return $this->hasMany(WeeklyPlan::class);
+    }
+
     public function sentMessages()
     {
         return $this->morphMany(Message::class, 'sender');

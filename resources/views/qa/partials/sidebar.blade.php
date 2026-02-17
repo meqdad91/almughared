@@ -17,7 +17,10 @@
             <a class="nav-link {{ isActive(['qa.session.pending', 'qa.subjects.pending*']) }}" href="{{ route('qa.session.pending') }}">🕒 Pending Sessions</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ isActive('qa.session.active') }}" href="{{ route('qa.session.active') }}">� Active Sessions</a>
+            <a class="nav-link {{ isActive('qa.session.active') }}" href="{{ route('qa.session.active') }}">✅ Active Sessions</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ isActive('qa.weekly-plans.*') }}" href="{{ route('qa.weekly-plans.pending') }}">📋 Pending Plans</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{ isActive('messages.*') }}" href="{{ route('messages.index') }}">
