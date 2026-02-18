@@ -6,7 +6,7 @@
     @endif
 
     <div class="page-header">
-        <h2>Pending Weekly Plans</h2>
+        <h2>Weekly Plans</h2>
     </div>
 
     @if($plans->count())
@@ -20,6 +20,7 @@
                                 <th>Session</th>
                                 <th>Trainer</th>
                                 <th class="text-center">Subjects</th>
+                                <th class="text-center">Status</th>
                                 <th class="text-center">Uploaded</th>
                                 <th class="text-center" style="width:90px"></th>
                             </tr>
@@ -31,9 +32,20 @@
                                     <td class="fw-semibold">{{ $plan->session->title ?? 'N/A' }}</td>
                                     <td>{{ $plan->trainer->name ?? 'N/A' }}</td>
                                     <td class="text-center">{{ count($plan->parsed_data ?? []) }}</td>
+                                    <td class="text-center">
+                                        @if($plan->status === 'pending')
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        @elseif($plan->status === 'approved')
+                                            <span class="badge bg-success">Approved</span>
+                                        @elseif($plan->status === 'declined')
+                                            <span class="badge bg-danger">Declined</span>
+                                        @else
+                                            <span class="badge bg-secondary">{{ ucfirst($plan->status) }}</span>
+                                        @endif
+                                    </td>
                                     <td class="text-center">{{ $plan->created_at->format('Y-m-d') }}</td>
                                     <td class="text-center">
-                                        <a href="{{ route('admin.users.weekly-plans.show', $plan) }}" class="btn btn-app btn-app-primary btn-app-sm">Review</a>
+                                        <a href="{{ route('admin.users.weekly-plans.show', $plan) }}" class="btn btn-app btn-app-primary btn-app-sm">View</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -46,8 +58,8 @@
     @else
         <div class="m-card">
             <div class="empty-state">
-                <div class="empty-state-icon">&#9989;</div>
-                <p>No pending weekly plans to review.</p>
+                <div class="empty-state-icon">&#128203;</div>
+                <p>No weekly plans found.</p>
             </div>
         </div>
     @endif

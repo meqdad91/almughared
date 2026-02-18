@@ -115,6 +115,15 @@ class WeeklyPlanController extends Controller
         return view('admin.weekly_plans.index', compact('plans'));
     }
 
+    public function indexForAdmin()
+    {
+        $plans = WeeklyPlan::with(['session', 'trainer'])
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.weekly_plans.index', compact('plans'));
+    }
+
     public function showForAdmin(WeeklyPlan $weeklyPlan)
     {
         $weeklyPlan->load(['session', 'trainer']);
@@ -142,7 +151,7 @@ class WeeklyPlanController extends Controller
 
         $redirectRoute = $guard === 'qa'
             ? 'qa.weekly-plans.pending'
-            : 'admin.users.weekly-plans.pending';
+            : 'admin.users.weekly-plans.index';
 
         return redirect()->route($redirectRoute)
             ->with('success', 'Weekly plan approved. ' . count($weeklyPlan->parsed_data) . ' subjects created.');
@@ -169,7 +178,7 @@ class WeeklyPlanController extends Controller
 
         $redirectRoute = $guard === 'qa'
             ? 'qa.weekly-plans.pending'
-            : 'admin.users.weekly-plans.pending';
+            : 'admin.users.weekly-plans.index';
 
         return redirect()->route($redirectRoute)
             ->with('success', 'Weekly plan declined.');

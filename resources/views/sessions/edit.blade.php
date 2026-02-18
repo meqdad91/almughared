@@ -8,6 +8,20 @@
         </div>
     </div>
 
+    @if(session('success'))
+        <div class="m-alert m-alert-success mb-3">{{ session('success') }}</div>
+    @endif
+
+    @if ($errors->any())
+        <div class="m-alert m-alert-danger mb-3">
+            <ul class="mb-0 ps-3">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="m-card">
@@ -37,7 +51,7 @@
                             <select name="days[]" class="form-select" multiple required>
                                 @foreach (['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
                                     <option value="{{ $day }}"
-                                        {{ in_array($day, old('days', json_decode($session->days, true))) ? 'selected' : '' }}>
+                                        {{ in_array($day, old('days', is_array($session->days) ? $session->days : json_decode($session->days, true) ?? [])) ? 'selected' : '' }}>
                                         {{ $day }}
                                     </option>
                                 @endforeach
@@ -47,6 +61,11 @@
                         <div class="mb-3">
                             <label class="form-label">Session Link (URL)</label>
                             <input type="url" name="link" class="form-control" required value="{{ old('link', $session->link) }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Capacity (max students)</label>
+                            <input type="number" name="capacity" class="form-control" required min="1" value="{{ old('capacity', $session->capacity) }}">
                         </div>
 
                         <div class="mb-3">
@@ -62,15 +81,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Students</label>
-                            <select name="trainees[]" class="form-select" multiple required>
-                                @foreach ($trainees as $trainee)
-                                    <option value="{{ $trainee->id }}"
-                                        {{ in_array($trainee->id, old('trainees', $session->trainees->pluck('id')->toArray())) ? 'selected' : '' }}>
-                                        {{ $trainee->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <a href="{{ route('admin.users.sessions.students', $session->id) }}" class="btn btn-app btn-app-outline btn-app-sm">Manage Students ({{ $session->trainees->count() }})</a>
                         </div>
 
                         <button type="submit" class="btn btn-app btn-app-primary">Update Session</button>

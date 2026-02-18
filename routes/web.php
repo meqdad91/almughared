@@ -70,11 +70,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             Route::resource('subjects', SubjectController::class);
             Route::resource('sessions', SessionController::class);
+            Route::get('sessions/{session}/students', [SessionController::class, 'students'])->name('sessions.students');
+            Route::post('sessions/{session}/students', [SessionController::class, 'addStudent'])->name('sessions.addStudent');
+            Route::post('sessions/{session}/students/remove', [SessionController::class, 'removeStudent'])->name('sessions.removeStudent');
             Route::get('/allSubjects', [SubjectController::class, 'allSubjects'])->name('subjects.allSubjects');
             Route::post('/reviews', [SubjectReviewController::class, 'store'])->name('reviews.store');
             Route::put('/reviews/{review}', [SubjectReviewController::class, 'update'])->name('reviews.update');
             Route::delete('/reviews/{review}', [SubjectReviewController::class, 'destroy'])->name('reviews.destroy');
 
+            Route::get('weekly-plans', [WeeklyPlanController::class, 'indexForAdmin'])->name('weekly-plans.index');
             Route::get('weekly-plans/pending', [WeeklyPlanController::class, 'pendingForAdmin'])->name('weekly-plans.pending');
             Route::get('weekly-plans/{weeklyPlan}', [WeeklyPlanController::class, 'showForAdmin'])->name('weekly-plans.show');
             Route::post('weekly-plans/{weeklyPlan}/approve', [WeeklyPlanController::class, 'approve'])->name('weekly-plans.approve');

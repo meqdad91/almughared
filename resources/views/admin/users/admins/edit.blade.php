@@ -38,6 +38,12 @@
                             @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label for="password_confirmation" class="form-label">Confirm New Password</label>
+                            <input type="password" id="password_confirmation" name="password_confirmation"
+                                   class="form-control" placeholder="Confirm new password...">
+                        </div>
+
                         <button type="submit" class="btn btn-app btn-app-primary">Update Admin</button>
                     </form>
                 </div>

@@ -8,7 +8,7 @@
     <div class="page-header">
         <h2>Review Weekly Plan</h2>
         <div class="page-actions">
-            <a href="{{ route('admin.users.weekly-plans.pending') }}" class="btn btn-app btn-app-light btn-app-sm">&larr; Back</a>
+            <a href="{{ route('admin.users.weekly-plans.index') }}" class="btn btn-app btn-app-light btn-app-sm">&larr; Back</a>
         </div>
     </div>
 
@@ -24,13 +24,31 @@
                     <span class="info-label">Trainer</span>
                     <div>{{ $weeklyPlan->trainer->name ?? 'N/A' }}</div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <span class="info-label">Uploaded</span>
                     <div>{{ $weeklyPlan->created_at->format('M d, Y \a\t g:i A') }}</div>
+                </div>
+                <div class="col-md-2">
+                    <span class="info-label">Status</span>
+                    <div>
+                        @if($weeklyPlan->status === 'pending')
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        @elseif($weeklyPlan->status === 'approved')
+                            <span class="badge bg-success">Approved</span>
+                        @elseif($weeklyPlan->status === 'declined')
+                            <span class="badge bg-danger">Declined</span>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    @if($weeklyPlan->status === 'declined' && $weeklyPlan->decline_reason)
+        <div class="m-alert m-alert-danger mb-3">
+            <strong>Decline Reason:</strong> {{ $weeklyPlan->decline_reason }}
+        </div>
+    @endif
 
     {{-- Subjects Table --}}
     <div class="m-card mb-4">

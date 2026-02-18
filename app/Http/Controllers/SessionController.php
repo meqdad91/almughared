@@ -11,7 +11,7 @@ class SessionController extends Controller
     // Display a listing of the sessions
     public function index()
     {
-        $sessions = Session::with('trainer')->paginate(10);
+        $sessions = Session::with('trainer')->withCount('trainees')->paginate(10);
         return view('sessions.index', compact('sessions'));
     }
 
@@ -19,8 +19,7 @@ class SessionController extends Controller
     public function create()
     {
         $trainers = Trainer::all();
-        $trainees = Trainee::all();
-        return view('sessions.create', compact('trainers', 'trainees'));
+        return view('sessions.create', compact('trainers'));
     }
 
     // Store a newly created session in the database
@@ -28,37 +27,24 @@ class SessionController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'time_from' => 'required|date_format:H:i',
-            'time_to' => 'required|date_format:H:i',
+            'time_from' => 'required',
+            'time_to' => 'required',
             'days' => 'required|array',
             'link' => 'required|url',
+            'capacity' => 'required|integer|min:1',
             'trainer_id' => 'required|exists:trainers,id',
-            'trainees' => 'required|array',
-            'trainees.*' => 'exists:trainees,id',
         ]);
 
-        // Create the session
-        $session = Session::create([
-            'title' => $validated['title'],
-            'time_from' => $validated['time_from'],
-            'time_to' => $validated['time_to'],
-            'days' => json_encode($validated['days']),
-            'link' => $validated['link'],
-            'trainer_id' => $validated['trainer_id'],
-        ]);
+        Session::create($validated);
 
-        // Attach selected trainees
-        $session->trainees()->attach($validated['trainees']);
-
-        return redirect()->route('sessions.index')->with('success', 'Session created successfully.');
+        return redirect()->route('admin.users.sessions.index')->with('success', 'Session created successfully.');
     }
 
     // Show the form for editing an existing session
     public function edit(Session $session)
     {
         $trainers = Trainer::all();
-        $trainees = Trainee::all();
-        return view('sessions.edit', compact('session', 'trainers', 'trainees'));
+        return view('sessions.edit', compact('session', 'trainers'));
     }
 
     // Update the specified session in the database
@@ -66,29 +52,53 @@ class SessionController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'time_from' => 'required|date_format:H:i',
-            'time_to' => 'required|date_format:H:i',
+            'time_from' => 'required',
+            'time_to' => 'required',
             'days' => 'required|array',
             'link' => 'required|url',
+            'capacity' => 'required|integer|min:1',
             'trainer_id' => 'required|exists:trainers,id',
-            'trainees' => 'required|array',
-            'trainees.*' => 'exists:trainees,id',
         ]);
 
-        // Update the session
-        $session->update([
-            'title' => $validated['title'],
-            'time_from' => $validated['time_from'],
-            'time_to' => $validated['time_to'],
-            'days' => json_encode($validated['days']),
-            'link' => $validated['link'],
-            'trainer_id' => $validated['trainer_id'],
+        $session->update($validated);
+
+        return redirect()->route('admin.users.sessions.index')->with('success', 'Session updated successfully.');
+    }
+
+    // Show the manage students page for a session
+    public function students(Session $session)
+    {
+        $session->load('trainees');
+        $availableTrainees = Trainee::whereNotIn('id', $session->trainees->pluck('id'))->get();
+        return view('sessions.students', compact('session', 'availableTrainees'));
+    }
+
+    // Add a student to the session
+    public function addStudent(Request $request, Session $session)
+    {
+        $validated = $request->validate([
+            'trainee_id' => 'required|exists:trainees,id',
         ]);
 
-        // Sync the trainees (update the pivot table)
-        $session->trainees()->sync($validated['trainees']);
+        if ($session->trainees()->count() >= $session->capacity) {
+            return redirect()->route('admin.users.sessions.students', $session)->with('error', 'Session is full. Maximum capacity is ' . $session->capacity . ' students.');
+        }
 
-        return redirect()->route('sessions.index')->with('success', 'Session updated successfully.');
+        $session->trainees()->attach($validated['trainee_id']);
+
+        return redirect()->route('admin.users.sessions.students', $session)->with('success', 'Student added successfully.');
+    }
+
+    // Remove a student from the session
+    public function removeStudent(Request $request, Session $session)
+    {
+        $validated = $request->validate([
+            'trainee_id' => 'required|exists:trainees,id',
+        ]);
+
+        $session->trainees()->detach($validated['trainee_id']);
+
+        return redirect()->route('admin.users.sessions.students', $session)->with('success', 'Student removed successfully.');
     }
 
     // Remove the specified session from the database
@@ -98,6 +108,6 @@ class SessionController extends Controller
         $session->trainees()->detach();
         $session->delete();
 
-        return redirect()->route('sessions.index')->with('success', 'Session deleted successfully.');
+        return redirect()->route('admin.users.sessions.index')->with('success', 'Session deleted successfully.');
     }
 }

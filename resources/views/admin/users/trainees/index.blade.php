@@ -48,9 +48,10 @@
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2 flex-wrap">
                                             @if ($trainee->status !== 'approved')
-                                                <button type="button" class="btn btn-app btn-app-success btn-app-sm" data-bs-toggle="modal" data-bs-target="#approveModal{{ $trainee->id }}">
-                                                    Approve
-                                                </button>
+                                                <form action="{{ route('admin.users.trainees.approve', $trainee->id) }}" method="POST" onsubmit="return confirm('Approve this student?')">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-app btn-app-success btn-app-sm">Approve</button>
+                                                </form>
                                             @endif
                                             <a href="{{ route('admin.users.trainees.edit', $trainee->id) }}" class="btn btn-app btn-app-outline btn-app-sm">Edit</a>
                                             <form action="{{ route('admin.users.trainees.destroy', $trainee->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
@@ -77,37 +78,4 @@
         </div>
     @endif
 
-    {{-- Approve Modals --}}
-    @foreach ($users as $trainee)
-        @if ($trainee->status !== 'approved')
-            <div class="modal fade" id="approveModal{{ $trainee->id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <form method="POST" action="{{ route('admin.users.trainees.approve', $trainee->id) }}">
-                        @csrf
-                        <div class="modal-content" style="border-radius:12px; border:none;">
-                            <div class="modal-header" style="border-bottom:1px solid #eee;">
-                                <h5 class="modal-title" style="font-weight:600; color:#2b1a40;">Approve Student: {{ $trainee->name }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body m-form">
-                                <div class="mb-3">
-                                    <label for="session_id_{{ $trainee->id }}" class="form-label">Assign to Session</label>
-                                    <select name="session_id" id="session_id_{{ $trainee->id }}" class="form-select" required>
-                                        <option value="">-- Select Session --</option>
-                                        @foreach ($sessions as $session)
-                                            <option value="{{ $session->id }}">{{ $session->title }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="modal-footer" style="border-top:1px solid #eee;">
-                                <button type="button" class="btn btn-app btn-app-light" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-app btn-app-success">Approve</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        @endif
-    @endforeach
 @endsection

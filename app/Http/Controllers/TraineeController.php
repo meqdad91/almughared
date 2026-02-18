@@ -17,8 +17,7 @@ class TraineeController extends Controller
     public function index()
     {
         $users = Trainee::with('sessions')->paginate(10);
-        $sessions = Session::all();
-        return view('admin.users.trainees.index', compact('users', 'sessions'));
+        return view('admin.users.trainees.index', compact('users'));
     }
 
     public function create()
@@ -86,19 +85,19 @@ class TraineeController extends Controller
 
     public function approve(Request $request, Trainee $trainee)
     {
-        $validated = $request->validate([
-            'session_id' => 'required|exists:sessions,id',
-        ]);
-
         $trainee->update(['status' => 'approved']);
-        $trainee->sessions()->syncWithoutDetaching([$validated['session_id']]);
 
-        return redirect()->route('admin.users.trainees.index')->with('success', 'Trainee approved and assigned to session.');
+        return redirect()->route('admin.users.trainees.index')->with('success', 'Trainee approved successfully.');
     }
 
     public function dashboard()
     {
         $trainee = Auth::guard('trainee')->user();
+
+        if ($trainee->status === 'pending') {
+            return view('trainee.dashboard', ['monthlySubjects' => collect(), 'nextSubject' => null]);
+        }
+
         // 1. Get sessions assigned to the trainee
         $sessions = $trainee->sessions()->with([
             'subjects' => function ($q) {
@@ -129,12 +128,20 @@ class TraineeController extends Controller
 
     public function sessions()
     {
+        if (Auth::guard('trainee')->user()->status === 'pending') {
+            return redirect()->route('trainee.dashboard')->with('error', 'Your account is pending approval.');
+        }
+
         $subjects = Subject::approved()->with('session')->latest()->paginate(10);
         return view('trainee.sessions', compact('subjects'));
     }
 
     public function sessionDetails($id)
     {
+        if (Auth::guard('trainee')->user()->status === 'pending') {
+            return redirect()->route('trainee.dashboard')->with('error', 'Your account is pending approval.');
+        }
+
         $subject = Subject::with('session')->findOrFail($id);
 
         return view('trainee.subject-details', compact('subject'));
@@ -142,6 +149,10 @@ class TraineeController extends Controller
 
     public function storeReview(Request $request, $id)
     {
+        if (Auth::guard('trainee')->user()->status === 'pending') {
+            return redirect()->route('trainee.dashboard')->with('error', 'Your account is pending approval.');
+        }
+
         $request->validate([
             'rate' => 'required|integer|min:1|max:5',
             'review' => 'required|string|max:1000',

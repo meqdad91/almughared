@@ -8,9 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class SubjectController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $subjects = Subject::with('session')->orderBy('date', 'desc')->paginate(10);
+        $subjects = Subject::with('session')
+            ->when($request->session_id, fn($q) => $q->where('session_id', $request->session_id))
+            ->orderBy('date', 'desc')
+            ->paginate(10)
+            ->withQueryString();
         return view('subjects.index', compact('subjects'));
     }
 

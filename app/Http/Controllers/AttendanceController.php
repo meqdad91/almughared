@@ -41,6 +41,10 @@ class AttendanceController extends Controller
     {
         $trainee = Auth::guard('trainee')->user();
 
+        if ($trainee->status === 'pending') {
+            return redirect()->route('trainee.dashboard')->with('error', 'Your account is pending approval.');
+        }
+
         $attendances = Attendance::where('trainee_id', $trainee->id)
             ->with('subject.session')
             ->latest()

@@ -9,7 +9,7 @@ use Laravel\Passport\HasApiTokens;
 
 class Session extends Model
 {
-    protected $fillable = ['title', 'time_from', 'time_to', 'days', 'link', 'trainer_id'];
+    protected $fillable = ['title', 'time_from', 'time_to', 'days', 'link', 'capacity', 'trainer_id'];
     protected $casts = [
         'days' => 'array',
     ];

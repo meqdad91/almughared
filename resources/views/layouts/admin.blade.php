@@ -40,13 +40,7 @@
                         <a class="nav-link {{ request()->routeIs('admin.users.sessions.*') ? 'active' : '' }}" href="{{ route('admin.users.sessions.index') }}">Sessions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.users.subjects.allSubjects') || request()->routeIs('admin.users.subjects.index') ? 'active' : '' }}" href="{{ route('admin.users.subjects.allSubjects') }}">Subjects</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.users.subjects.pending*') ? 'active' : '' }}" href="{{ route('admin.users.subjects.pending') }}">Pending Subjects</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.users.weekly-plans.*') ? 'active' : '' }}" href="{{ route('admin.users.weekly-plans.pending') }}">Pending Plans</a>
+                        <a class="nav-link {{ request()->routeIs('admin.users.weekly-plans.*') ? 'active' : '' }}" href="{{ route('admin.users.weekly-plans.index') }}">Plans</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.users.reviews.*') ? 'active' : '' }}" href="{{ route('admin.users.reviews.index') }}">Reviews</a>

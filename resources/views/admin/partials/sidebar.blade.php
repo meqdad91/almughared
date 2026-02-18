@@ -72,25 +72,11 @@
             </a>
         </li>
 
-        {{-- Subjects --}}
-        <li class="nav-item">
-            <a class="nav-link {{ isActive('admin.users.subjects.*') }}"
-                href="{{ route('admin.users.subjects.allSubjects') }}">
-                📚 Subjects
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {{ isActive('admin.users.subjects.pending') }}"
-                href="{{ route('admin.users.subjects.pending') }}">
-                ⏳ Pending Subjects
-            </a>
-        </li>
-
         {{-- Weekly Plans --}}
         <li class="nav-item">
             <a class="nav-link {{ isActive('admin.users.weekly-plans.*') }}"
-                href="{{ route('admin.users.weekly-plans.pending') }}">
-                📋 Pending Plans
+                href="{{ route('admin.users.weekly-plans.index') }}">
+                📋 Plans
             </a>
         </li>
 

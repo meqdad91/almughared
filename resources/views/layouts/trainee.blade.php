@@ -32,6 +32,7 @@
             </button>
 
             <div class="collapse navbar-collapse" id="traineeNav">
+                @if($currentUser->status === 'approved')
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link {{ isActive('trainee.dashboard') }}" href="{{ route('trainee.dashboard') }}">Dashboard</a>
@@ -51,6 +52,9 @@
                         </a>
                     </li>
                 </ul>
+                @else
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+                @endif
 
                 <div class="user-dropdown dropdown">
                     <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">

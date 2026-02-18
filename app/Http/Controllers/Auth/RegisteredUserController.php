@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Session;
 use App\Models\Trainee;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -17,7 +19,12 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $sessions = Session::withCount('trainees')
+            ->with('trainer')
+            ->get()
+            ->filter(fn($s) => !$s->capacity || $s->trainees_count < $s->capacity);
+
+        return view('auth.register', compact('sessions'));
     }
 
     /**
@@ -29,15 +36,20 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:trainees,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'session_id' => ['required', 'exists:sessions,id'],
         ]);
 
-        Trainee::create([
+        $trainee = Trainee::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'status' => 'pending',
         ]);
 
-        return redirect()->route('login')->with('success', 'Registration successful! Your account is pending approval by an admin.');
+        $trainee->sessions()->attach($request->session_id);
+
+        Auth::guard('trainee')->login($trainee);
+
+        return redirect()->route('trainee.dashboard');
     }
 }

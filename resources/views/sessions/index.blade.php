@@ -19,6 +19,7 @@
                                 <th>Title</th>
                                 <th>Teacher</th>
                                 <th class="text-center">Time</th>
+                                <th class="text-center">Students</th>
                                 <th class="text-center">Days</th>
                                 <th class="text-center" style="width:220px"></th>
                             </tr>
@@ -36,12 +37,16 @@
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        @php $days = json_decode($session->days, true); @endphp
+                                        {{ $session->trainees_count ?? $session->trainees->count() }} / {{ $session->capacity }}
+                                    </td>
+                                    <td class="text-center">
+                                        @php $days = is_array($session->days) ? $session->days : json_decode($session->days, true); @endphp
                                         {{ $days ? implode(', ', $days) : '-' }}
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
                                             <a href="{{ route('admin.users.subjects.index', ['session_id' => $session->id]) }}" class="btn btn-app btn-app-outline btn-app-sm">Subjects</a>
+                                            <a href="{{ route('admin.users.sessions.students', $session->id) }}" class="btn btn-app btn-app-outline btn-app-sm">Students</a>
                                             <a href="{{ route('admin.users.sessions.edit', $session->id) }}" class="btn btn-app btn-app-outline btn-app-sm">Edit</a>
                                             <form action="{{ route('admin.users.sessions.destroy', $session->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                                                 @csrf

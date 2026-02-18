@@ -39,6 +39,12 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="password_confirmation" class="form-label">Confirm New Password</label>
+                            <input type="password" id="password_confirmation" name="password_confirmation"
+                                   class="form-control" placeholder="Confirm new password...">
+                        </div>
+
+                        <div class="mb-3">
                             <label for="sessions" class="form-label">Assign Sessions</label>
                             <select name="sessions[]" id="sessions" class="form-select @error('sessions') is-invalid @enderror" multiple size="5">
                                 @foreach ($sessions as $session)
